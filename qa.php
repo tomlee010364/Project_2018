@@ -23,7 +23,7 @@ mysqli_set_charset($conn, "utf8");
 			echo $_SESSION['is_login'];
 			echo "<br>";
 			$sql_user="SELECT user_id, name FROM `user`";
-			$sql_q="SELECT * FROM `q`";
+			$sql_q="SELECT id, topic, Q_id FROM `q`";
 			$result_user=mysqli_query($conn, $sql_user);
 			$result_q=mysqli_query($conn, $sql_q);
 			$counter=mysqli_num_rows($result_q);
@@ -35,8 +35,7 @@ mysqli_set_charset($conn, "utf8");
 				mysqli_data_seek($result_user, $tmp_id-1);
 				$row_user=mysqli_fetch_assoc($result_user);
 				echo $row_user["name"] . "<br>";
-				echo $row_q["topic"] . "<br>";
-				echo $row_q["context"];
+				echo "<a href='q.php?question_id=" . $row_q["Q_id"] . "'>" . $row_q["topic"] . "</a><br>";
 				echo "<br><br>";
 			}
 		?>
