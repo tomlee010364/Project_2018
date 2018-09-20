@@ -20,21 +20,22 @@ mysqli_set_charset($conn, "utf8");
 	<body>
 		<?php
 		if($_SESSION['is_login']!=null):
-			$sql="SELECT * FROM `q`";
-			$result=mysqli_query($conn, $sql);
-			mysqli_data_seek($result, $_GET["question_id"]-1);
-			$row=mysqli_fetch_assoc($result);
+			$sql_q="SELECT * FROM `q`";
+			$result_q=mysqli_query($conn, $sql_q);
+			mysqli_data_seek($result_q, $_GET["question_id"]-1);
+			$row_q=mysqli_fetch_assoc($result_q);
 			
 			/*Who ask this question*/
 			$sql_user="SELECT user_id, name FROM `user`";
 			$result_user=mysqli_query($conn, $sql_user);
-			$tmp_id=$row["id"];
+			$tmp_id=$row_q["id"];
 			mysqli_data_seek($result_user, $tmp_id-1);
 			$row_user=mysqli_fetch_assoc($result_user);
 			
-			echo "<h1>" . $row["topic"] . "</h1>";
+			echo "<h1>" . $row_q["topic"] . "</h1>";
 			echo $row_user["name"] . "<br>";
-			echo $row["context"] . "<br>";
+			echo date("Y/m/d H:i", strtotime($row_q["ask_time"])) . "<br>";
+			echo $row_q["context"] . "<br>";
 		?>
 			<a href='reply.php?question_id=<?php echo $_GET["question_id"];?>'>Reply</a>
 			<a href='qa.php'>Q&A</a>
@@ -53,6 +54,9 @@ mysqli_set_charset($conn, "utf8");
 					mysqli_data_seek($result_user, $tmp_id-1);
 					$row_user=mysqli_fetch_assoc($result_user);
 					echo $row_user["name"] . "<br>";
+					
+					/*Reply time*/
+					echo date("Y/m/d H:i", strtotime($row_a["reply_time"])) . "<br>";
 					
 					/*Reply context*/
 					echo $row_a["answer"];
