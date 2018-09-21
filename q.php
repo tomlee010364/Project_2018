@@ -83,6 +83,30 @@ mysqli_set_charset($conn, "utf8");
 					
 					/*Reply context*/
 					echo $row_a["answer"];
+					
+					/*Recommend*/
+					$sql_recommend_a="SELECT * FROM `recommend_a`";
+					$result_recommend_a=mysqli_query($conn, $sql_recommend_a);
+					$counter_recommend_a=mysqli_num_rows($result_recommend_a);
+					$flag_recommend_a=false;
+					for($j=0;$j<$counter_recommend_a;$j++){
+						mysqli_data_seek($result_recommend_a, $j);
+						$row_recommend_a=mysqli_fetch_assoc($result_recommend_a);
+						if($row_a["A_id"] == $row_recommend_a["recommend_a_id"] && $_SESSION['is_login'] == $row_recommend_a["recommend_user_id"]){
+							$flag_recommend_a = true;
+							break;
+						}
+					}
+					if($flag_recommend_a == false):
+		?>
+						<a href='recommend_a.php?question_id=<?php echo $_GET["question_id"]?>&answer_id=<?php echo $row_a["A_id"];?>'>Good Answer</a>
+		<?php
+					else:
+		?>
+						<a href='cancel_recommend_a.php?question_id=<?php echo $_GET["question_id"]?>&answer_id=<?php echo $row_a["A_id"];?>'>Cancel</a>
+		<?php
+					endif;
+					
 					echo "<br>-------------------------------------------------------------------------<br>";
 				}
 			}
