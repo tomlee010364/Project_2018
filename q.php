@@ -36,6 +36,29 @@ mysqli_set_charset($conn, "utf8");
 			echo $row_user["name"] . "<br>";
 			echo date("Y/m/d H:i", strtotime($row_q["ask_time"])) . "<br>";
 			echo $row_q["context"] . "<br>";
+			
+			/*Recommend*/
+			$sql_recommend_q="SELECT * FROM `recommend_q`";
+			$result_recommend_q=mysqli_query($conn, $sql_recommend_q);
+			$counter_recommend_q=mysqli_num_rows($result_recommend_q);
+			$flag_recommend_q=false;
+			for($i=0;$i<$counter_recommend_q;$i++){
+				mysqli_data_seek($result_recommend_q, $i);
+				$row_recommend_q=mysqli_fetch_assoc($result_recommend_q);
+				if($_GET["question_id"] == $row_recommend_q["recommend_q_id"] && $_SESSION['is_login'] == $row_recommend_q["recommend_user_id"]){
+					$flag_recommend_q = true;
+					break;
+				}
+			}
+			if($flag_recommend_q == false):
+		?>
+				<a href='recommend_q.php?question_id=<?php echo $_GET["question_id"];?>'>Good Question</a>
+		<?php
+			else:
+		?>
+				<a href='cancel_recommend_q.php?question_id=<?php echo $_GET["question_id"];?>'>Cancel</a>
+		<?php
+			endif;
 		?>
 			<a href='reply.php?question_id=<?php echo $_GET["question_id"];?>'>Reply</a>
 			<a href='qa.php'>Q&A</a>
