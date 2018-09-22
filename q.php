@@ -50,6 +50,15 @@ mysqli_set_charset($conn, "utf8");
 					break;
 				}
 			}
+			$number_of_recommend = 0;
+			for($i=0;$i<$counter_recommend_q;$i++){
+				mysqli_data_seek($result_recommend_q, $i);
+				$row_recommend_q=mysqli_fetch_assoc($result_recommend_q);
+				if($_GET["question_id"] == $row_recommend_q["recommend_q_id"]){
+					$number_of_recommend++;
+				}
+			}
+			echo $number_of_recommend . " people recommend this question<br>";
 			if($flag_recommend_q == false):
 		?>
 				<a href='recommend_q.php?question_id=<?php echo $_GET["question_id"];?>'>Good Question</a>
@@ -97,6 +106,15 @@ mysqli_set_charset($conn, "utf8");
 							break;
 						}
 					}
+					$number_of_recommend = 0;
+					for($j=0;$j<$counter_recommend_a;$j++){
+						mysqli_data_seek($result_recommend_a, $j);
+						$row_recommend_a=mysqli_fetch_assoc($result_recommend_a);
+						if($row_a["A_id"] == $row_recommend_a["recommend_a_id"]){
+							$number_of_recommend++;
+						}
+					}
+					echo "<br>" . $number_of_recommend . " people recommend this answer<br>";
 					if($flag_recommend_a == false):
 		?>
 						<a href='recommend_a.php?question_id=<?php echo $_GET["question_id"]?>&answer_id=<?php echo $row_a["A_id"];?>'>Good Answer</a>
