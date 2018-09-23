@@ -19,6 +19,7 @@ session_start();
 			header('Location: homepage.php');
 		else:
 		?>
+		<a href='register.php'>Sign up</a><br>
 		<form id="submit_form" method="post">
 			<input type="text" name="account" /><br>
 			<input type="password" name="pw" /><br>
