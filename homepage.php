@@ -18,7 +18,9 @@ session_start();
 			echo $_SESSION['is_login'];
 		?>
 		<a href='qa.php'>Q&A</a>
+		<a href='profile.php?id=<?php echo $_SESSION['is_login'];?>'>Profile Page</a>
 		<a href='logout.php'>logout</a>
+		
 		<?php
 		else:
 			header('Location: login.php');
