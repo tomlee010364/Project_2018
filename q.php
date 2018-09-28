@@ -33,7 +33,7 @@ mysqli_set_charset($conn, "utf8");
 			$row_user=mysqli_fetch_assoc($result_user);
 			
 			echo "<h1>" . $row_q["topic"] . "</h1>";
-			echo $row_user["name"] . "<br>";
+			echo "<a href=profile.php?id=" . $row_q["id"] . ">" . $row_user["name"] . "</a><br>";
 			echo date("Y/m/d H:i", strtotime($row_q["ask_time"])) . "<br>";
 			echo $row_q["context"] . "<br>";
 			

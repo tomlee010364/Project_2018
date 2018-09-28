@@ -33,10 +33,9 @@ mysqli_set_charset($conn, "utf8");
 			for($i=$counter-1;$i>-1;$i--){
 				mysqli_data_seek($result_q, $i);
 				$row_q=mysqli_fetch_assoc($result_q);
-				$tmp_id=$row_q["id"];
-				mysqli_data_seek($result_user, $tmp_id-1);
+				mysqli_data_seek($result_user, $row_q["id"]-1);
 				$row_user=mysqli_fetch_assoc($result_user);
-				echo $row_user["name"] . "<br>";
+				echo "<a href=profile.php?id=" . $row_q["id"] . ">" . $row_user["name"] . "</a><br>";
 				echo "<a href='q.php?question_id=" . $row_q["Q_id"] . "'>" . $row_q["topic"] . "</a><br>";
 				echo date("Y/m/d H:i", strtotime($row_q["ask_time"]));
 				echo "<br><br>";

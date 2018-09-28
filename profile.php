@@ -22,6 +22,13 @@ mysqli_set_charset($conn, "utf8");
 		if($_SESSION['is_login'] == $_GET['id']): // user's own page
 			echo "MY OWN PAGE!!";
 		else:
+			/*Introduction*/
+			$sql_user="SELECT name FROM `user`";
+			$result_user=mysqli_query($conn, $sql_user);
+			mysqli_data_seek($result_user, $_GET['id']-1);
+			$row_user=mysqli_fetch_assoc($result_user);
+			echo "This is " . $row_user["name"] . "'s page<br>";
+		
 			/*Recommend*/
 			$sql_follow="SELECT * FROM `follow`";
 			$result_follow=mysqli_query($conn, $sql_follow);
