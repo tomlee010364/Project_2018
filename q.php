@@ -24,9 +24,18 @@ mysqli_set_charset($conn, "utf8");
 			$result_q=mysqli_query($conn, $sql_q);
 			mysqli_data_seek($result_q, $_GET["question_id"]-1);
 			$row_q=mysqli_fetch_assoc($result_q);
+
+			/*Check hurry*/
+			date_default_timezone_set('Asia/Taipei');
+			$time1 = new DateTime('now');
+			$time2 = new DateTime($row_q["expire_time"]);
+			$interval = $time1->diff($time2);
+			if($interval->format('%R') == '+'):// %R == - means the time now is later than the expire time
+				echo "This question is now in a hurry!!!<br>";
+			endif;
 			
 			/*Who ask this question*/
-			$sql_user="SELECT user_id, name FROM `user`";
+			$sql_user="SELECT user_id, name, point FROM `user`";
 			$result_user=mysqli_query($conn, $sql_user);
 			mysqli_data_seek($result_user, $row_q["id"]-1);
 			$row_user=mysqli_fetch_assoc($result_user);
@@ -146,7 +155,34 @@ mysqli_set_charset($conn, "utf8");
 					}
 				}
 				
-				if($max > 0):
+				if($max > 0):// if there is a recommend reply
+					
+					if($row_q["is_hurry"] == 1):
+						date_default_timezone_set('Asia/Taipei');
+						$time1 = new DateTime('now');
+						$time2 = new DateTime($row_q["expire_time"]);
+						$interval = $time1->diff($time2);
+						if($interval->format('%R') == '-'):// %R == - means the time now is later than the expire time
+							
+							/*User now have how many points*/
+							mysqli_data_seek($result_user, $row_a["id"]-1);
+							$row_user = mysqli_fetch_assoc($result_user);
+							$tmp_point = $row_user["point"];
+							
+							/*Update the points*/
+							$tmp_id = $row_a["id"];
+							$tmp_point += $row_q["reward_point"];
+							$tmp_Q_id = $row_q["Q_id"];
+							
+							$sql_update = "UPDATE `user` SET point='$tmp_point' WHERE user_id='$tmp_id'";
+							$conn->query($sql_update);
+							$sql_update = "UPDATE `q` SET reward_point='0' WHERE Q_id='$tmp_Q_id'";
+							$conn->query($sql_update);
+							$sql_update = "UPDATE `q` SET is_hurry='0' WHERE Q_id='$tmp_Q_id'";
+							$conn->query($sql_update);
+						endif;
+					endif;
+					
 					echo "#Best Answer<br>";
 					/*Fetch user's data*/
 					mysqli_data_seek($result_a, $max_supporter_reply-1);
@@ -184,8 +220,68 @@ mysqli_set_charset($conn, "utf8");
 		<?php
 					endif;
 					echo "<br>============================================<br>";
+				
+				else:// no recommend reply
+				
+					if($row_q["is_hurry"] == 1):
+						date_default_timezone_set('Asia/Taipei');
+						$time1 = new DateTime('now');
+						$time2 = new DateTime($row_q["expire_time"]);
+						$interval = $time1->diff($time2);
+						if($interval->format('%R') == '-'):// %R == - means the time now is later than the expire time
+						
+							$tmp_Q_id = $row_q["Q_id"];
+							$sql_update = "UPDATE `q` SET is_hurry='0' WHERE Q_id='$tmp_Q_id'";
+							$conn->query($sql_update);
+						
+							/*User now have how many points*/
+							mysqli_data_seek($result_user, $row_q["id"]-1);
+							$row_user = mysqli_fetch_assoc($result_user);
+							$tmp_point = $row_user["point"];
+							
+							/*Update the points*/
+							$tmp_id = $row_q["id"];
+							$tmp_point += $row_q["reward_point"];
+							
+							$sql_update = "UPDATE `user` SET point='$tmp_point' WHERE user_id='$tmp_id'";
+							$conn->query($sql_update);
+							$sql_update = "UPDATE `q` SET reward_point='0' WHERE Q_id='$tmp_Q_id'";
+							$conn->query($sql_update);
+				
+						endif;
+					endif;
+				
 				endif;				
 			else:
+			
+				if($row_q["is_hurry"] == 1):
+					date_default_timezone_set('Asia/Taipei');
+					$time1 = new DateTime('now');
+					$time2 = new DateTime($row_q["expire_time"]);
+					$interval = $time1->diff($time2);
+					if($interval->format('%R') == '-'):// %R == - means the time now is later than the expire time
+						
+						$tmp_Q_id = $row_q["Q_id"];
+						$sql_update = "UPDATE `q` SET is_hurry='0' WHERE Q_id='$tmp_Q_id'";
+						$conn->query($sql_update);
+						
+						/*User now have how many points*/
+						mysqli_data_seek($result_user, $row_q["id"]-1);
+						$row_user = mysqli_fetch_assoc($result_user);
+						$tmp_point = $row_user["point"];
+							
+						/*Update the points*/
+						$tmp_id = $row_q["id"];
+						$tmp_point += $row_q["reward_point"];
+							
+						$sql_update = "UPDATE `user` SET point='$tmp_point' WHERE user_id='$tmp_id'";
+						$conn->query($sql_update);
+						$sql_update = "UPDATE `q` SET reward_point='0' WHERE Q_id='$tmp_Q_id'";
+						$conn->query($sql_update);
+						
+					endif;
+				endif;
+				
 				echo "No Reply here QQ";
 				echo "<br>-------------------------------------------------------------------------<br>";
 			endif;
