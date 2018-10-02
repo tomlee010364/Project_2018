@@ -156,6 +156,10 @@ mysqli_set_charset($conn, "utf8");
 				}
 				
 				if($max > 0):// if there is a recommend reply
+				
+					/*Fetch user's data*/
+					mysqli_data_seek($result_a, $max_supporter_reply-1);
+					$row_a=mysqli_fetch_assoc($result_a);
 					
 					if($row_q["is_hurry"] == 1):
 						date_default_timezone_set('Asia/Taipei');
@@ -184,9 +188,6 @@ mysqli_set_charset($conn, "utf8");
 					endif;
 					
 					echo "#Best Answer<br>";
-					/*Fetch user's data*/
-					mysqli_data_seek($result_a, $max_supporter_reply-1);
-					$row_a=mysqli_fetch_assoc($result_a);
 			
 					/*Who reply this question*/
 					mysqli_data_seek($result_user, $row_a["id"]-1);

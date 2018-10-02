@@ -22,6 +22,9 @@ mysqli_set_charset($conn, "utf8");
 		<a href='logout.php'>logout</a>
 		<?php
 		if($_SESSION['is_login']!=null):
+			require "check_hurry.php";
+			$check = new check_hurry();
+			
 			//echo $_SESSION['is_login'];
 			echo "<br>";
 			$sql_user="SELECT user_id, name FROM `user`";
